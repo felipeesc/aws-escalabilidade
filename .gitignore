@@ -1,0 +1,28 @@
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/bootstrap/.terraform/
+terraform/bootstrap/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars
+terraform/terraform.tfvars.example
+
+# Nunca commitar — contém senha do banco
+terraform/terraform.tfvars
+
+# Java
+app/target/
+app/.mvn/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Claude Code
+.claude/
