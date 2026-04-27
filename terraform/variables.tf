@@ -101,3 +101,17 @@ variable "alarm_email" {
   type        = string
   default     = ""
 }
+variable "acm_certificate_arn" {
+  description = "ARN do certificado ACM para o listener HTTPS do ALB (ex: arn:aws:acm:us-east-1:ACCOUNT:certificate/UUID)"
+  type        = string
+}
+variable "single_nat_gateway" {
+  description = "Usar um único NAT Gateway (reduz custo em dev/staging ~$32/mês). Em prod manter false para HA por AZ."
+  type        = bool
+  default     = false
+}
+variable "db_multi_az" {
+  description = "Habilitar Multi-AZ no RDS. Manter true em prod; false reduz custo em dev/staging."
+  type        = bool
+  default     = true
+}

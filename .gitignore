@@ -1,28 +1,21 @@
-# Terraform
-terraform/.terraform/
-terraform/.terraform.lock.hcl
-terraform/bootstrap/.terraform/
-terraform/bootstrap/.terraform.lock.hcl
-terraform/*.tfstate
-terraform/*.tfstate.backup
-terraform/*.tfvars
-terraform/terraform.tfvars.example
-
-# Nunca commitar — contém senha do banco
-terraform/terraform.tfvars
-
-# Java
+# Terraform state — usar backend remoto (S3)
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+# tfvars com segredos — apenas o .example vai pro repo
+terraform.tfvars
+!terraform.tfvars.example
+# Binários
+*.deb
+*.rpm
+*.pkg
+# Java / Maven
 app/target/
-app/.mvn/
 *.class
 *.jar
-*.war
-
 # IDE
 .idea/
 *.iml
 .vscode/
-.DS_Store
-
-# Claude Code
 .claude/

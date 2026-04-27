@@ -3,12 +3,13 @@ resource "aws_elasticache_subnet_group" "redis" {
   subnet_ids = aws_subnet.private[*].id
   tags       = merge(local.common_tags, { Name = "${var.project}-redis-subnet-group" })
 }
-
 resource "aws_elasticache_replication_group" "redis" {
   replication_group_id       = "${var.project}-redis"
   description                = "Redis for ${var.project}"
   node_type                  = var.redis_node_type
-  num_cache_clusters         = 1
+  num_cache_clusters         = 2
+  automatic_failover_enabled = true
+  multi_az_enabled           = true
   parameter_group_name       = "default.redis7"
   engine_version             = "7.1"
   port                       = 6379
