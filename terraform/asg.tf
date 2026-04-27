@@ -4,7 +4,7 @@ data "aws_ami" "al2023" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 
   filter {
@@ -61,7 +61,7 @@ resource "aws_autoscaling_group" "app" {
   vpc_zone_identifier = aws_subnet.private[*].id
   target_group_arns   = [aws_lb_target_group.app.arn]
   health_check_type   = "ELB"
-  health_check_grace_period = 90
+  health_check_grace_period = 180
 
   launch_template {
     id      = aws_launch_template.app.id

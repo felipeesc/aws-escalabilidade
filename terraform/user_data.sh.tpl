@@ -6,8 +6,10 @@ dnf install -y docker jq
 systemctl enable --now docker
 usermod -aG docker ec2-user
 
-# Busca região via metadados da instância — sem hardcode
-REGION=$(curl -s -m 5 http://169.254.169.254/latest/meta-data/placement/region)
+# Busca região e instance-id via metadados (IMDSv2)
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+REGION=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
+INSTANCE_ID=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
 
 # Busca credenciais do Secrets Manager usando a IAM Role da instância
 SECRET=$(aws secretsmanager get-secret-value \
@@ -33,6 +35,10 @@ docker run -d \
   --name loadsim \
   --restart unless-stopped \
   -p ${app_port}:${app_port} \
+  --log-driver=awslogs \
+  --log-opt awslogs-region="$REGION" \
+  --log-opt awslogs-group="/loadsim/app" \
+  --log-opt awslogs-stream="$INSTANCE_ID" \
   -e DB_HOST="$DB_HOST" \
   -e DB_PORT="$DB_PORT" \
   -e DB_NAME="$DB_NAME" \
@@ -41,6 +47,6 @@ docker run -d \
   -e REDIS_HOST="${redis_host}" \
   -e REDIS_PORT="${redis_port}" \
   -e REDIS_SSL=true \
-  -e DDL_AUTO=validate \
+  -e DDL_AUTO=update \
   -e PORT="${app_port}" \
   "${app_image}"

@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ public class ProductService {
     @Cacheable(value = "products", key = "'page:' + #page + ':' + #size")
     @Transactional(readOnly = true)
     public List<Product> findAll(int page, int size) {
-        Page<Product> result = repo.findAll(PageRequest.of(page, size));
+        Page<Product> result = repo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id")));
         return result.getContent();
     }
 

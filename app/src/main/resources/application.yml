@@ -7,7 +7,7 @@ spring:
     username: ${DB_USER:postgres}
     password: ${DB_PASS:postgres}
     hikari:
-      maximum-pool-size: 20
+      maximum-pool-size: 8
       minimum-idle: 5
       connection-timeout: 30000
 
@@ -35,6 +35,10 @@ spring:
           max-active: 16
           max-idle: 8
           min-idle: 2
+
+  threads:
+    virtual:
+      enabled: true
 
   cache:
     type: redis

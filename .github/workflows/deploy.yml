@@ -8,6 +8,10 @@ on:
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: loadsim
@@ -72,7 +76,7 @@ jobs:
           echo "uri=$IMAGE_URI" >> $GITHUB_OUTPUT
 
       - name: Scan de vulnerabilidades (Trivy)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.70.0
         with:
           image-ref: ${{ steps.build-image.outputs.uri }}
           format: table

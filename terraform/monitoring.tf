@@ -1,3 +1,9 @@
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/loadsim/app"
+  retention_in_days = 7
+  tags              = merge(local.common_tags, { Name = "${var.project}-app-logs" })
+}
+
 resource "aws_sns_topic" "alarms" {
   name = "${var.project}-alarms"
   tags = merge(local.common_tags, { Name = "${var.project}-alarms" })
