@@ -50,6 +50,7 @@ resource "aws_launch_template" "app" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [image_id] # evita instance refresh involuntario quando a Amazon publica nova AMI
   }
 }
 

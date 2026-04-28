@@ -1,0 +1,20 @@
+# Copie para terraform.tfvars e ajuste os valores
+aws_region    = "us-east-1"
+project       = "loadsim"
+instance_type = "t3.small"
+
+asg_min     = 2
+asg_max     = 10
+asg_desired = 2
+
+db_password = "TROQUE_AQUI"
+
+# URI da imagem Docker publicada no ECR
+# Exemplo: 123456789.dkr.ecr.us-east-1.amazonaws.com/loadsim:latest
+app_image = ""
+# ARN do certificado ACM para HTTPS (obrigatório)
+# acm_certificate_arn = "arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/UUID"
+# Economia: usar 1 NAT Gateway em vez de 1 por AZ (dev/staging)
+# single_nat_gateway = true
+# Economia: desabilitar Multi-AZ do RDS em dev/staging
+# db_multi_az = false

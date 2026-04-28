@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "app" {
   target_type          = "instance"
   deregistration_delay = 30
   health_check {
-    path                = "/api/health"
+    path                = "/actuator/health"
     interval            = 15
     timeout             = 5
     healthy_threshold   = 2

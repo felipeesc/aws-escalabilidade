@@ -5,6 +5,7 @@ import com.example.loadsim.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,20 +27,25 @@ public class ProductService {
         return result.getContent();
     }
 
-    @Cacheable(value = "products", key = "#id")
+    @Cacheable(value = "product", key = "#id")
     @Transactional(readOnly = true)
     public Product findById(Long id) {
         return repo.findById(id).orElseThrow(() ->
                 new jakarta.persistence.EntityNotFoundException("Product not found: " + id));
     }
 
+    // novo produto invalida todas as paginas, mas nao toca cache de items individuais
     @CacheEvict(value = "products", allEntries = true)
     @Transactional
     public Product create(Product product) {
         return repo.save(product);
     }
 
-    @CacheEvict(value = "products", allEntries = true)
+    // delete invalida o item especifico + todas as paginas (produto some das listagens)
+    @Caching(evict = {
+        @CacheEvict(value = "product", key = "#id"),
+        @CacheEvict(value = "products", allEntries = true)
+    })
     @Transactional
     public void delete(Long id) {
         repo.deleteById(id);
