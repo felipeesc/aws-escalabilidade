@@ -54,14 +54,21 @@ resource "aws_launch_template" "app" {
 }
 
 resource "aws_autoscaling_group" "app" {
-  name                = "${var.project}-asg"
-  min_size            = var.asg_min
-  max_size            = var.asg_max
-  desired_capacity    = var.asg_desired
-  vpc_zone_identifier = aws_subnet.private[*].id
-  target_group_arns   = [aws_lb_target_group.app.arn]
-  health_check_type   = "ELB"
-  health_check_grace_period = 180
+  name                      = "${var.project}-asg"
+  min_size                  = var.asg_min
+  max_size                  = var.asg_max
+  desired_capacity          = var.asg_desired
+  vpc_zone_identifier       = aws_subnet.private[*].id
+  target_group_arns         = [aws_lb_target_group.app.arn]
+  health_check_type         = "ELB"
+  health_check_grace_period = 360 # Spring Boot + Docker pull from ECR takes 5-7 min on cold start
+
+  # Garante que o secret (com credenciais reais do RDS) e o log group existam
+  # antes de qualquer instancia tentar usar esses recursos no startup
+  depends_on = [
+    aws_secretsmanager_secret_version.db,
+    aws_cloudwatch_log_group.app,
+  ]
 
   launch_template {
     id      = aws_launch_template.app.id
@@ -72,6 +79,7 @@ resource "aws_autoscaling_group" "app" {
     strategy = "Rolling"
     preferences {
       min_healthy_percentage = 50
+      instance_warmup        = 360 # tempo para o app inicializar antes de contar como saudavel
     }
   }
 

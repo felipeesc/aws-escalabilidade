@@ -102,8 +102,9 @@ variable "alarm_email" {
   default     = ""
 }
 variable "acm_certificate_arn" {
-  description = "ARN do certificado ACM para o listener HTTPS do ALB (ex: arn:aws:acm:us-east-1:ACCOUNT:certificate/UUID)"
+  description = "ARN do certificado ACM para o listener HTTPS do ALB. Deixar vazio para usar HTTP puro (dev/load-test)."
   type        = string
+  default     = ""
 }
 variable "single_nat_gateway" {
   description = "Usar um único NAT Gateway (reduz custo em dev/staging ~$32/mês). Em prod manter false para HA por AZ."

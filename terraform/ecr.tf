@@ -1,6 +1,6 @@
 resource "aws_ecr_repository" "app" {
   name                 = var.project
-  image_tag_mutability = "IMMUTABLE"
+  image_tag_mutability = "MUTABLE"
   image_scanning_configuration {
     scan_on_push = true
   }
@@ -25,10 +25,10 @@ resource "aws_ecr_lifecycle_policy" "app" {
         rulePriority = 2
         description  = "Manter apenas as 10 imagens tagged mais recentes"
         selection = {
-          tagStatus      = "tagged"
-          tagPrefixList  = ["v", "sha-", "latest"]
-          countType      = "imageCountMoreThan"
-          countNumber    = 10
+          tagStatus     = "tagged"
+          tagPrefixList = ["v", "sha-", "latest"]
+          countType     = "imageCountMoreThan"
+          countNumber   = 10
         }
         action = { type = "expire" }
       }

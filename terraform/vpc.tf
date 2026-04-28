@@ -61,7 +61,7 @@ resource "aws_route_table" "private" {
   count  = var.az_count
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block     = "0.0.0.0/0"
+    cidr_block = "0.0.0.0/0"
     # single_nat_gateway=true → todos apontam pro NAT 0; false → cada AZ tem o seu
     nat_gateway_id = var.single_nat_gateway ? aws_nat_gateway.nat[0].id : aws_nat_gateway.nat[count.index].id
   }
